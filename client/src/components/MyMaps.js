@@ -39,6 +39,7 @@ class MyMaps extends Component {
     map.chartContainer.background.events.disableType('doublehit');
     map.seriesContainer.draggable = false;
     map.seriesContainer.resizable = false;
+    map.chartContainer.wheelable = false;
 
     // Create map polygon series
     let countrySeries = new am4maps.MapPolygonSeries();

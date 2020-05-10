@@ -25,10 +25,7 @@ const AppNavbar = (props) => {
           <Nav navbar>
             <React.StrictMode>
               <NavItem>
-                <NavLink href="/components/">Components</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">
+                <NavLink href="https://github.com/ezra-moses/covid-19-india">
                   GitHub
                 </NavLink>
               </NavItem>

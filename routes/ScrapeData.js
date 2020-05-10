@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
 // const endpoint = 'https://datawrapper.dwcdn.net/h5y2W/42/';
 // const endpoint = 'http://covidindiaupdates.in/';
 const endpoint = 'https://www.datawrapper.de/_/h5y2W/';
+const datafile = path.join(__dirname, '../data.json');
 
 // asyn func to scrape covid data
 const scrapdata = async () => {
@@ -15,7 +18,8 @@ const scrapdata = async () => {
   // set the frame that has the table
   const frame = page
     .frames()
-    .find((frame) => frame.url() === 'https://datawrapper.dwcdn.net/h5y2W/42/');
+    .find((frame) => frame.name() === 'datawrapper-chart-h5y2W');
+  // .find((frame) => frame.url() === 'https://datawrapper.dwcdn.net/h5y2W/42/');
 
   // get the rows
   const trs = await frame.$x(
@@ -33,9 +37,9 @@ const scrapdata = async () => {
     );
     let val = {
       name: rowval[0],
-      active: Number(rowval[1].split('\n', 1)),
-      recovered: Number(rowval[2].split('\n', 1)),
-      deceased: Number(rowval[3].split('\n', 1)),
+      active: Number(rowval[1].split('\n', 1)[0].replace(/,/, '')),
+      recovered: Number(rowval[2].split('\n', 1)[0].replace(/,/, '')),
+      deceased: Number(rowval[3].split('\n', 1)[0].replace(/,/, '')),
     };
     // console.log(val);
     data.push(val);
@@ -52,10 +56,58 @@ const scrapdata = async () => {
   }
 };
 
+Date.prototype.addHours = function (h) {
+  this.setTime(this.getTime() + h * 60 * 60 * 1000);
+  return this;
+};
+
+// func to get data file stats
+const getFileStats = () => {
+  let mtime = new Date().addHours(-2);
+  if (fs.existsSync(datafile)) {
+    const stats = fs.statSync(datafile);
+    mtime = stats.mtime;
+    console.log('mtime-- ' + mtime);
+  }
+  return mtime;
+};
+
+// true if the data file's modified time is less than an hour
+const doIneedToScrape = (mtime) => {
+  const now = new Date();
+  // now.addHours(-2);
+  console.log('mtime ' + mtime + ' now ' + now);
+  const timediff = Math.abs(now - mtime);
+  const LAST_HOUR = 60 * 60 * 1000;
+  console.log('timediff : ' + timediff + ' LAST_HOUR: ' + LAST_HOUR);
+  if (timediff < LAST_HOUR) return false;
+  else return true;
+};
+
+// Route /
 router.get('/', (req, res) => {
-  scrapdata()
-    .then((x) => res.send(x))
-    .catch((x) => res.sendStatus(404).send('no data available'));
+  const mtime = getFileStats();
+  const shouldScrape = doIneedToScrape(mtime);
+
+  // scrape if data file is old than an hour
+  if (shouldScrape) {
+    console.log('not less than');
+    scrapdata()
+      .then((x) => {
+        fs.writeFile(datafile, JSON.stringify(x), 'utf8', (err) => {
+          if (err) throw err;
+          console.log('Done writing'); // Success
+        });
+        res.send(x);
+      })
+      .catch((x) => res.send('no data available'));
+  } else {
+    console.log('data file generated less than an hour so using it');
+    fs.readFile(datafile, (err, data) => {
+      if (err) throw err;
+      res.send(JSON.parse(data));
+    });
+  }
 });
 
 module.exports = router;

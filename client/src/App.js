@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import './App.css';
 import MyMaps from './components/MyMaps';
 import Dashboard from './components/Dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';

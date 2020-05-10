@@ -67,7 +67,7 @@ const getFileStats = () => {
   if (fs.existsSync(datafile)) {
     const stats = fs.statSync(datafile);
     mtime = stats.mtime;
-    console.log('mtime-- ' + mtime);
+    console.log('getFileStats: ' + mtime);
   }
   return mtime;
 };
@@ -78,7 +78,7 @@ const doIneedToScrape = (mtime) => {
   // now.addHours(-2);
   console.log('mtime ' + mtime + ' now ' + now);
   const timediff = Math.abs(now - mtime);
-  const LAST_HOUR = 60 * 60 * 1000;
+  const LAST_HOUR = 24 * 60 * 60 * 1000;
   console.log('timediff : ' + timediff + ' LAST_HOUR: ' + LAST_HOUR);
   if (timediff < LAST_HOUR) return false;
   else return true;
@@ -91,7 +91,7 @@ router.get('/', (req, res) => {
 
   // scrape if data file is old than an hour
   if (shouldScrape) {
-    console.log('not less than');
+    console.log('file modified not less than 1 day');
     scrapdata()
       .then((x) => {
         fs.writeFile(datafile, JSON.stringify(x), 'utf8', (err) => {
@@ -102,7 +102,7 @@ router.get('/', (req, res) => {
       })
       .catch((x) => res.send('no data available'));
   } else {
-    console.log('data file generated less than an hour so using it');
+    console.log('data file generated less than 1 day so using it');
     fs.readFile(datafile, (err, data) => {
       if (err) throw err;
       res.send(JSON.parse(data));

@@ -10,7 +10,9 @@ const datafile = path.join(__dirname, '../data.json');
 
 // asyn func to scrape covid data
 const scrapdata = async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
   const page = await browser.newPage();
   await page.goto(endpoint);
   dumpFrameTree(page.mainFrame(), '');
@@ -67,7 +69,7 @@ const getFileStats = () => {
   if (fs.existsSync(datafile)) {
     const stats = fs.statSync(datafile);
     mtime = stats.mtime;
-    console.log('getFileStats: ' + mtime);
+    // console.log('getFileStats: ' + mtime);
   }
   return mtime;
 };
@@ -76,9 +78,9 @@ const getFileStats = () => {
 const doIneedToScrape = (mtime) => {
   const now = new Date();
   // now.addHours(-2);
-  console.log('mtime ' + mtime + ' now ' + now);
+  console.log('getFileStats ' + mtime + ' now ' + now);
   const timediff = Math.abs(now - mtime);
-  const LAST_HOUR = 24 * 60 * 60 * 1000;
+  const LAST_HOUR = 60 * 60 * 1000;
   console.log('timediff : ' + timediff + ' LAST_HOUR: ' + LAST_HOUR);
   if (timediff < LAST_HOUR) return false;
   else return true;
@@ -91,7 +93,7 @@ router.get('/', (req, res) => {
 
   // scrape if data file is old than an hour
   if (shouldScrape) {
-    console.log('file modified not less than 1 day');
+    console.log('file modified an hour ago');
     scrapdata()
       .then((x) => {
         fs.writeFile(datafile, JSON.stringify(x), 'utf8', (err) => {

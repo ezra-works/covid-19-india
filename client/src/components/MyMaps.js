@@ -2,19 +2,8 @@ import React, { Component } from 'react';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4maps from '@amcharts/amcharts4/maps';
 import am4themes_dark from '@amcharts/amcharts4/themes/dark';
-// import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-// import am4themes_kelly from '@amcharts/amcharts4/themes/kelly';
 import am4themes_material from '@amcharts/amcharts4/themes/material';
-// import am4themes_moonrisekingdom from '@amcharts/amcharts4/themes/moonrisekingdom';
-// import am4themes_dataviz from '@amcharts/amcharts4/themes/dataviz';
-// import am4themes_frozen from '@amcharts/amcharts4/themes/frozen';
-// import am4themes_microchart from '@amcharts/amcharts4/themes/microchart';
-// import am4themes_patterns from '@amcharts/amcharts4/themes/patterns';
-// import am4themes_spiritedaway from '@amcharts/amcharts4/themes/spiritedaway';
-// Importing geodata (map data)
-// import am4geodata_worldIndiaLow from '@amcharts/amcharts4-geodata/worldIndiaLow';
 import am4geodata_india2019Low from '@amcharts/amcharts4-geodata/india2019Low';
-import { Container } from 'reactstrap';
 
 am4core.useTheme(am4themes_dark);
 
@@ -29,7 +18,6 @@ class MyMaps extends Component {
     // map.geodata = am4geodata_worldIndiaLow;
     map.geodata = am4geodata_india2019Low;
     // map.geodataSource.url = '/IndiaStateTopojsonFiles/TamilNadu.geojson';
-    // map.geodataSource.url = '/IndiaStateTopojsonFiles/Ladakh.geojson';
 
     // Set projection
     // map.projection = new am4maps.projections.Miller();
@@ -136,7 +124,9 @@ class MyMaps extends Component {
     // Home Button
     let back = map.chartContainer.createChild(am4core.Button);
     back.padding(5, 5, 5, 5);
-    back.align = 'left';
+    back.marginRight = '5%';
+    back.align = 'right';
+    back.valign = 'top';
     back.hide();
     back.events.on('hit', function () {
       countrySeries.show();
@@ -177,13 +167,14 @@ class MyMaps extends Component {
   render() {
     return (
       <>
-        <Container
+        {/* <Container
           id="mapdiv"
           style={{
             marginTop: '2em',
             width: '500px',
             height: '500px',
-          }}></Container>
+          }}></Container> */}
+        <div id="mapdiv"></div>
       </>
     );
   }

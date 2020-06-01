@@ -1,38 +1,33 @@
-import React, { useState } from 'react';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
+import React from 'react';
+import '../styles/Navbar.css';
 
-const AppNavbar = (props) => {
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleNavbar = () => setCollapsed(!collapsed);
-
+const AppNavbar = () => {
   return (
     <>
-      <Navbar color="dark" dark>
-        <NavbarBrand href="/" className="mr-auto">
-          Covid-19 India
-        </NavbarBrand>
-        <NavbarToggler onClick={toggleNavbar} className="mr-2" />
-        <Collapse isOpen={!collapsed} navbar>
-          <Nav navbar>
-            <React.StrictMode>
-              <NavItem>
-                <NavLink href="https://github.com/ezra-moses/covid-19-india">
-                  GitHub
-                </NavLink>
-              </NavItem>
-            </React.StrictMode>
-          </Nav>
-        </Collapse>
-      </Navbar>
+      <header>
+        <div class="brand1">
+          <h3>
+            <a href="/">Covid-19 India</a>
+          </h3>
+        </div>
+        <div class="brand2">
+          <div class="brand2_block">
+            <input type="checkbox" class="toggler"></input>
+            <div class="hamburger">
+              <div></div>
+            </div>
+            <div class="brand3">
+              <ul>
+                <li>
+                  <a href="https://github.com/ezra-moses/covid-19-india">
+                    GitHub
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
     </>
   );
 };

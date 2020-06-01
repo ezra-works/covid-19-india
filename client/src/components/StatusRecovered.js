@@ -1,10 +1,13 @@
 import React from 'react';
-import { getRecoveredCount } from '../constants/StateCounts';
 
-const StatusRecovered = ({ stateId }) => {
+const StatusRecovered = ({ stateId, data }) => {
   return (
     <div>
-      <h6>{getRecoveredCount(stateId)}</h6>
+      <h6>
+        {data.map((states) => {
+          if (states.id === stateId) return states.recovered;
+        })}
+      </h6>
     </div>
   );
 };

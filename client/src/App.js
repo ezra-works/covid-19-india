@@ -1,14 +1,31 @@
 import React, { Component } from 'react';
 import MyMaps from './components/MyMaps';
 import Dashboard from './components/Dashboard';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import AppNavbar from './components/AppNavbar';
-import { Container, Row, Col } from 'reactstrap';
-import ScrapeData from './components/ScrapeData';
+import './styles/App.css';
 
 class App extends Component {
   state = {
-    id: 'IN-TN',
+    id: 'IN-ALL',
+    data: [],
+  };
+
+  componentDidMount() {
+    const scrapdata = async (endpoint) => {
+      const res = await fetch(endpoint);
+      let data = await res.json();
+      return data;
+    };
+
+    scrapdata('/data')
+      .then((data) => {
+        this.onScrapdata(data);
+      })
+      .catch((x) => console.log(x));
+  }
+
+  onScrapdata = (data) => {
+    this.setState({ ...this.state, data });
   };
   onMapStateChange = (id) => {
     // this.setState({ id: 'IN-KL' });
@@ -17,21 +34,13 @@ class App extends Component {
   render() {
     return (
       <>
-        <ScrapeData />
         <AppNavbar></AppNavbar>
-        <Container>
-          <Row>
-            <Col xs="6">
-              <MyMaps
-                paddingRight={20}
-                stateId={this.state.id}
-                onMapStateChange={this.onMapStateChange}></MyMaps>
-            </Col>
-            <Col>
-              <Dashboard stateId={this.state.id}></Dashboard>
-            </Col>
-          </Row>
-        </Container>
+        <Dashboard stateId={this.state.id} data={this.state.data}></Dashboard>
+        {<h3 className="spaceify"></h3>}
+        <MyMaps
+          paddingRight={20}
+          stateId={this.state.id}
+          onMapStateChange={this.onMapStateChange}></MyMaps>
       </>
     );
   }

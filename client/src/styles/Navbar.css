@@ -1,0 +1,119 @@
+* a,
+ul {
+  text-decoration: none;
+  list-style-type: none;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: #333333;
+}
+
+.brand1 {
+  order: 1;
+  padding: 5px;
+}
+
+.brand2 {
+  order: 3;
+}
+
+.brand1 a {
+  color: #ffffff;
+}
+
+.brand2_block {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.brand2 .toggler {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  width: 80%;
+  height: 80%;
+  opacity: 0;
+}
+
+.brand2_block .hamburger {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width: inherit;
+  height: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hamburger Line */
+.brand2_block .hamburger > div {
+  position: relative;
+  flex: none;
+  width: 100%;
+  height: 2px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  transition: all 0.7s ease;
+}
+
+/* Hamburger Lines - Top & Bottom */
+.brand2_block .hamburger > div::before,
+.brand2_block .hamburger > div::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -7px;
+  width: 100%;
+  height: 2px;
+  background: inherit;
+}
+
+/* Moves Line Down */
+.brand2_block .hamburger > div::after {
+  top: 7px;
+}
+
+/* Expands Lines */
+.brand2_block .toggler:checked + .hamburger > div:before {
+  top: -15px;
+  transition: all 0.7s ease;
+}
+.brand2_block .toggler:checked + .hamburger > div:after {
+  top: 15px;
+  transition: all 0.7s ease;
+}
+
+.brand2_block .toggler:checked + .hamburger + .brand3 {
+  display: block;
+  animation: repo;
+  animation-duration: 1s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+.brand3 {
+  position: absolute;
+  top: 35px;
+  display: none;
+}
+
+@keyframes repo {
+  0% {
+    right: -45px;
+  }
+  100% {
+    right: 45px;
+  }
+}
+
+.brand3 a {
+  color: #000000;
+}

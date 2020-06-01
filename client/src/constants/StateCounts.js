@@ -16,9 +16,6 @@ export const getDeceasedCount = (id) => {
 };
 
 export const getTotalCount = (id) => {
-  return statevalues.reduce((states) => {
-    if (states.id === id)
-      return states.active + states.recovered + states.deceased;
-    return 0;
-  });
+  const countrystate = statevalues.find((states) => states.id === id);
+  return countrystate.total;
 };

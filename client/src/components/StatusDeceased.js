@@ -1,10 +1,13 @@
 import React from 'react';
-import { getDeceasedCount } from '../constants/StateCounts';
 
-const StatusDeceased = ({ stateId }) => {
+const StatusDeceased = ({ stateId, data }) => {
   return (
     <div>
-      <h6>{getDeceasedCount(stateId)}</h6>
+      <h6>
+        {data.map((states) => {
+          if (states.id === stateId) return states.deceased;
+        })}
+      </h6>
     </div>
   );
 };

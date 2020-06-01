@@ -1,15 +1,15 @@
 import React from 'react';
 
-const StatusActive = ({ stateId, data }) => {
+const StatusTotal = ({ stateId, data }) => {
   return (
     <div>
       <h6>
         {data.map((states) => {
-          if (states.id === stateId) return states.active;
+          if (states.id === stateId) return states.total;
         })}
       </h6>
     </div>
   );
 };
 
-export default StatusActive;
+export default StatusTotal;

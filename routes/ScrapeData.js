@@ -3,10 +3,13 @@ const router = express.Router();
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
+let stateValues;
+
 // const endpoint = 'https://datawrapper.dwcdn.net/h5y2W/42/';
 // const endpoint = 'http://covidindiaupdates.in/';
 const endpoint = 'https://www.datawrapper.de/_/h5y2W/';
 const datafile = path.join(__dirname, '../data.json');
+const statefile = path.join(__dirname, '../statevalue.json');
 
 // asyn func to scrape covid data
 const scrapdata = async () => {
@@ -32,20 +35,45 @@ const scrapdata = async () => {
 
   // prepare the value to send
   const data = [];
+  let totalStateActive = 0;
+  let totalStateRecovered = 0;
+  let totalStateDeceased = 0;
+  let totalStateAdded = 0;
+  stateValues = readDefaultStateValue();
+
   for (const tr of trs) {
     // const label = await frame.evaluate((el) => el.innerText, option);
     const rowval = await tr.$$eval('td', (tds) =>
       tds.map((td) => td.innerText)
     );
-    let val = {
-      name: rowval[0],
-      active: Number(rowval[1].split('\n', 1)[0].replace(/,/, '')),
-      recovered: Number(rowval[2].split('\n', 1)[0].replace(/,/, '')),
-      deceased: Number(rowval[3].split('\n', 1)[0].replace(/,/, '')),
-    };
-    // console.log(val);
-    data.push(val);
+
+    let val = getStateValueByName(rowval[0]);
+    if (val) {
+      // val.name = rowval[0];
+      val.active = Number(rowval[1].split('\n', 1)[0].replace(/,/, ''));
+      val.recovered = Number(rowval[2].split('\n', 1)[0].replace(/,/, ''));
+      val.deceased = Number(rowval[3].split('\n', 1)[0].replace(/,/, ''));
+      val.total = Number(rowval[4].split('\n', 1)[0].replace(/,/, ''));
+
+      totalStateActive += val.active;
+      totalStateRecovered += val.recovered;
+      totalStateDeceased += val.deceased;
+      totalStateAdded += val.total;
+      data.push(val);
+    }
   }
+
+  // Calculate All states total
+  let allstates = {
+    id: 'IN-ALL',
+    name: 'India-All-States',
+    active: totalStateActive,
+    recovered: totalStateRecovered,
+    deceased: totalStateDeceased,
+    total: totalStateAdded,
+  };
+  // console.log('allstates ' + allstates);
+  data.push(allstates);
 
   await browser.close();
   return data;
@@ -58,6 +86,19 @@ const scrapdata = async () => {
   }
 };
 
+// Read Dummy data
+const readDefaultStateValue = () => {
+  let defaultData = fs.readFileSync(statefile, 'utf8');
+  return JSON.parse(defaultData);
+};
+
+// Map country states by Name
+const getStateValueByName = (name) => {
+  let statevalue = stateValues.find((state) => state.name === name.trim());
+  return statevalue;
+};
+
+// custom
 Date.prototype.addHours = function (h) {
   this.setTime(this.getTime() + h * 60 * 60 * 1000);
   return this;
@@ -65,11 +106,10 @@ Date.prototype.addHours = function (h) {
 
 // func to get data file stats
 const getFileStats = () => {
-  let mtime = new Date().addHours(-2);
+  let mtime = new Date().addHours(-3);
   if (fs.existsSync(datafile)) {
     const stats = fs.statSync(datafile);
     mtime = stats.mtime;
-    // console.log('getFileStats: ' + mtime);
   }
   return mtime;
 };
@@ -77,7 +117,6 @@ const getFileStats = () => {
 // true if the data file's modified time is less than an hour
 const doIneedToScrape = (mtime) => {
   const now = new Date();
-  // now.addHours(-2);
   console.log('getFileStats ' + mtime + ' now ' + now);
   const timediff = Math.abs(now - mtime);
   const LAST_HOUR = 60 * 60 * 1000;
@@ -102,7 +141,7 @@ router.get('/', (req, res) => {
         });
         res.send(x);
       })
-      .catch((x) => res.send('no data available'));
+      .catch((x) => res.send('no data available' + x));
   } else {
     console.log('data file generated less than 1 day so using it');
     fs.readFile(datafile, (err, data) => {

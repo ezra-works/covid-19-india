@@ -66,7 +66,7 @@ const scrapdata = async () => {
   // Calculate All states total
   let allstates = {
     id: 'IN-ALL',
-    name: 'India-All-States',
+    name: 'India',
     active: totalStateActive,
     recovered: totalStateRecovered,
     deceased: totalStateDeceased,

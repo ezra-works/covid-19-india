@@ -1,29 +1,17 @@
 import React from 'react';
-import StatusRecovered from './StatusRecovered';
+import StateName from './StateName';
 import StatusActive from './StatusActive';
+import StatusRecovered from './StatusRecovered';
 import StatusDeceased from './StatusDeceased';
 import StatusTotal from './StatusTotal';
 
 const Dashboard = (props) => {
   return (
-    // <Container className="split right">
-    // <Container style={{ marginTop: '8em' }}>
-    //   <Row>
-    //     <Col>
-    //       <Label for="StatusActive">Active</Label>
-    //       <StatusActive stateId={props.stateId} />
-    //     </Col>
-    //     <Col>
-    //       <Label for="StatusRecovered">Recovered</Label>
-    //       <StatusRecovered stateId={props.stateId} />
-    //     </Col>
-    //     <Col>
-    //       <Label for="StatusDeceased">Deceased</Label>
-    //       <StatusDeceased stateId={props.stateId} />
-    //     </Col>
-    //   </Row>
-    // </Container>
     <div className="innerContainer">
+      <div>
+        <h5 for="StateName">Region</h5>
+        <StateName stateId={props.stateId} data={props.data} />
+      </div>
       <div>
         <h5 for="StatusActive">Active</h5>
         <StatusActive stateId={props.stateId} data={props.data} />

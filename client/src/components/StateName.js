@@ -6,6 +6,7 @@ const StateName = ({ stateId, data }) => {
       <h6>
         {data.map((states) => {
           if (states.id === stateId) return states.name;
+          return '';
         })}
       </h6>
     </div>

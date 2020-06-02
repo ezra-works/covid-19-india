@@ -6,6 +6,7 @@ const StatusActive = ({ stateId, data }) => {
       <h6>
         {data.map((states) => {
           if (states.id === stateId) return states.active;
+          return '';
         })}
       </h6>
     </div>

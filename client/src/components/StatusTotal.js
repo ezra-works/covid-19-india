@@ -6,6 +6,7 @@ const StatusTotal = ({ stateId, data }) => {
       <h6>
         {data.map((states) => {
           if (states.id === stateId) return states.total;
+          return '';
         })}
       </h6>
     </div>

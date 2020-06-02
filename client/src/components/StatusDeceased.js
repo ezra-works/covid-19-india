@@ -6,6 +6,7 @@ const StatusDeceased = ({ stateId, data }) => {
       <h6>
         {data.map((states) => {
           if (states.id === stateId) return states.deceased;
+          return '';
         })}
       </h6>
     </div>

@@ -108,9 +108,11 @@ class MyMaps extends Component {
         ev.target.dataItem.dataContext.id
       );
 
-      const statename = ev.target.dataItem.dataContext.name.replace(/ /g, '');
+      let statename = ev.target.dataItem.dataContext.name.replace(/ /g, '');
       if (statename) {
         stateSeries.clearCache();
+        if (statename.match(/Daman/)) statename = 'Daman';
+        if (statename.match(/Dadra/)) statename = 'DadraandNagarHaveli';
         stateSeries.geodataSource.url =
           '/IndiaStateTopojsonFiles/' + statename + '.geojson';
         // console.log('statename : ' + statename);
@@ -133,7 +135,6 @@ class MyMaps extends Component {
       map.goHome();
       stateSeries.hide();
       back.hide();
-      // map.zoomToMapObject(countrySeries.getPolygonById('IN'));
     });
     back.fill = colorSet.getIndex(0); // am4core.color('#FFFFFF');
     back.icon = new am4core.Sprite();

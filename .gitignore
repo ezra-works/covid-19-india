@@ -22,6 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Not Included
 *AppTodos.js
 *Example.js
 *Todos.js
@@ -31,3 +32,4 @@ yarn-error.log*
 *Navbar2.css
 *test.html
 *Tricks
+*github_images/

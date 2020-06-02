@@ -113,6 +113,7 @@ class MyMaps extends Component {
         stateSeries.clearCache();
         if (statename.match(/Daman/)) statename = 'Daman';
         if (statename.match(/Dadra/)) statename = 'DadraandNagarHaveli';
+        if (statename.match(/Telengana/)) statename = 'Telangana';
         stateSeries.geodataSource.url =
           '/IndiaStateTopojsonFiles/' + statename + '.geojson';
         // console.log('statename : ' + statename);

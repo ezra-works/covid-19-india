@@ -28,10 +28,10 @@ const scrapdata = async () => {
 
   // get the rows
   const trs = await frame.$x(
-    '//*[@id="chart"]/div[2]/table/tbody/tr',
+    '//*[@id="chart"]/div/table/tbody/tr',
     (element) => element.textContent
   );
-  //   console.log(trs.length);
+  // console.log(trs.length);
 
   // prepare the value to send
   const data = [];
